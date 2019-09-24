@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using InstructorsListApp.Models;
 
 namespace InstructorsListApp.Controllers
 {
     [Route("api/v1/instructors")]
+    [ApiController]
     public class InstructorsDataController : Controller
     {
         DatabaseContext databaseContext;

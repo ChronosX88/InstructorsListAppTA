@@ -27,12 +27,13 @@ namespace InstructorsListApp
                                 .ConfigurationExtensions
                                 .GetConnectionString(this.Configuration, "DefaultDatabase");
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(conString));
-            //services.
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +50,14 @@ namespace InstructorsListApp
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
