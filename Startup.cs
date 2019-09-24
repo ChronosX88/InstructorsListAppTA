@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using InstructorsListApp.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace instructors_crud_test_task
+namespace InstructorsListApp
 {
     public class Startup
     {
@@ -21,7 +21,13 @@ namespace instructors_crud_test_task
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            string conString = Microsoft
+                                .Extensions
+                                .Configuration
+                                .ConfigurationExtensions
+                                .GetConnectionString(this.Configuration, "DefaultDatabase");
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(conString));
+            //services.
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -46,13 +52,6 @@ namespace instructors_crud_test_task
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
 
             app.UseSpa(spa =>
             {
