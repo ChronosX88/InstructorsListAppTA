@@ -28,7 +28,7 @@ namespace InstructorsListApp.Controllers
             if(ModelState.IsValid) {
                 instructor.Id = Guid.NewGuid().ToString();
                 databaseContext.Instructors.Add(instructor);
-                databaseContext.SaveChangesAsync();
+                databaseContext.SaveChanges();
                 return Ok(instructor.Id);
             }
             return BadRequest(ModelState);
@@ -37,9 +37,15 @@ namespace InstructorsListApp.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateInstructorEntry(string id, [FromBody] Instructor instructor) {
             if(ModelState.IsValid) {
-                databaseContext.Instructors.Update(instructor);
-                databaseContext.SaveChangesAsync();
-                return Ok();
+                instructor.Id = id;
+                var instructorEntry = databaseContext.Instructors.FirstOrDefault(i => i.Id == id);
+                if(instructorEntry != null) {
+                    databaseContext.Entry<Instructor>(instructorEntry).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+                    databaseContext.Instructors.Update(instructor);
+                    databaseContext.SaveChanges();
+                    return Ok();
+                }
+                return NotFound("Given instructor isn't found");
             }
             return BadRequest(ModelState);
         }
@@ -49,10 +55,10 @@ namespace InstructorsListApp.Controllers
             Instructor instructor = databaseContext.Instructors.FirstOrDefault(i => i.Id == id);
             if(instructor != null) {
                 databaseContext.Instructors.Remove(instructor);
-                databaseContext.SaveChangesAsync();
+                databaseContext.SaveChanges();
                 return Ok();
             }
-            return BadRequest("No such instructor");
+            return NotFound("No such instructor");
         }
     }
 }
