@@ -32,8 +32,6 @@ namespace InstructorsListApp
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +71,14 @@ namespace InstructorsListApp
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
             });
+
+            // initialize database
+            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using (var serviceScope = serviceScopeFactory.CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetService<DatabaseContext>();
+                dbContext.Database.EnsureCreated();
+            }
         }
     }
 }
