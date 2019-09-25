@@ -31,18 +31,21 @@ namespace InstructorsListApp.Controllers
                 databaseContext.Entry<Instructor>(instructor).State = EntityState.Detached; // remove unneccessary refs
                 return Ok(instructor);
             }
-            return NotFound("Given instructor isn't found");
+            return NotFound(new Error(Error.EntryIsNotFound, "No such instructor"));
         }
 
         [HttpPost("add")]
         public IActionResult CreateInstructorEntry([FromBody] Instructor instructor) {
             if(ModelState.IsValid) {
+                if(instructor.FirstName == null && instructor.LastName == null && instructor.MiddleName == null) {
+                    return BadRequest(new Error(Error.PostBodyIsNotValid, "Given model isn't valid!"));
+                }
                 instructor.Id = Guid.NewGuid().ToString();
                 databaseContext.Instructors.Add(instructor);
                 databaseContext.SaveChanges();
                 return Ok(instructor.Id);
             }
-            return BadRequest(ModelState);
+            return BadRequest(new Error(Error.PostBodyIsNotValid, "Given model isn't valid!"));
         }
 
         [HttpPut("{id}")]
@@ -56,7 +59,7 @@ namespace InstructorsListApp.Controllers
                     databaseContext.SaveChanges();
                     return Ok();
                 }
-                return NotFound("Given instructor isn't found");
+                return NotFound(new Error(Error.EntryIsNotFound, "No such instructor"));
             }
             return BadRequest(ModelState);
         }
@@ -69,7 +72,7 @@ namespace InstructorsListApp.Controllers
                 databaseContext.SaveChanges();
                 return Ok();
             }
-            return NotFound("No such instructor");
+            return NotFound(new Error(Error.EntryIsNotFound, "No such instructor"));
         }
     }
 }
