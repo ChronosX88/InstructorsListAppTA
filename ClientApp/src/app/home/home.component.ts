@@ -1,17 +1,20 @@
-import { Component, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, Inject, QueryList, ViewChildren } from '@angular/core';
 import { Instructor } from '../models/instructor';
 import { InstructorsHttpService } from '../services/instructors-http-service';
+import { NgbdSortableHeader, SortEvent, compare } from '../utils/ngbd-sortable-header';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  styleUrls: ['../utils/ngbd-sortable-header.css'],
   providers: [InstructorsHttpService]
 })
 export class HomeComponent {
     public instructors: Instructor[];
     private changingInstructor: Instructor = new Instructor();
     private savedInstructor: Instructor = new Instructor();
+
+    @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>
 
     constructor(private instructorsService: InstructorsHttpService) {}
 
@@ -61,5 +64,21 @@ export class HomeComponent {
         this.instructorsService.deleteInstructor(instructor.id).subscribe(_ =>{
             this.instructors.splice(this.instructors.indexOf(instructor), 1)
         })
+    }
+
+    onSort({column, direction}: SortEvent) {
+        // resetting other headers
+        this.headers.forEach(header => {
+            if (header.sortable !== column) {
+                header.direction = '';
+            }
+        });
+
+        if(direction != '') {
+            this.instructors.sort((a, b) => {
+                const res = compare(a[column], b[column]);
+                return direction === 'asc' ? res : -res;
+            });
+        }
     }
 }
