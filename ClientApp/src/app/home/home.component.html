@@ -4,17 +4,27 @@
         <tr>
           <th>First name</th>
           <th>Last Name</th>
-          <th>DELETE</th>
+          <th>Manage</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let instructor of instructors">
           <td>{{ instructor.firstName }}</td>
           <td>{{ instructor.lastName }}</td>
-          <td><button type="button" class="btn btn-danger" (click)="deleteInstructor(instructor)">DELETE</button></td>
+          <td>
+            <ng-template [ngIf]="changingInstructor?.id != instructor.id" [ngIfElse]="edit">
+                <button type="button" class="btn btn-primary" style="margin-right: 10px" (click)="setChangingInstructor(instructor)">Change</button>
+            </ng-template>
+            <button type="button" class="btn btn-danger" (click)="deleteInstructor(instructor)">DELETE</button>
+          </td>
         </tr>
     </tbody>
 </table>
+
+<ng-template #edit>
+    <button type="button" class="btn btn-primary" style="margin-right: 10px" (click)="clearChangingInstructor(true)">Cancel edit</button>
+</ng-template>
+
 <div style="text-align: center;"><h1>Instructor Details</h1>
   <br>
   <label><h5 style="text-align: initial">First Name</h5><input type="text" style="margin-right: 20px" [(ngModel)]="changingInstructor.firstName"></label>
