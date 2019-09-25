@@ -43,7 +43,7 @@ namespace InstructorsListApp.Controllers
                 instructor.Id = Guid.NewGuid().ToString();
                 databaseContext.Instructors.Add(instructor);
                 databaseContext.SaveChanges();
-                return Ok(instructor.Id);
+                return Ok(instructor);
             }
             return BadRequest(new Error(Error.PostBodyIsNotValid, "Given model isn't valid!"));
         }
