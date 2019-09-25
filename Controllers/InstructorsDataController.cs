@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using InstructorsListApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace InstructorsListApp.Controllers
 {
@@ -23,6 +24,16 @@ namespace InstructorsListApp.Controllers
             return databaseContext.Instructors.ToList();
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetInstructorByID(string id) {
+            var instructor = databaseContext.Instructors.FirstOrDefault(i => i.Id == id);
+            if(instructor != null) {
+                databaseContext.Entry<Instructor>(instructor).State = EntityState.Detached; // remove unneccessary refs
+                return Ok(instructor);
+            }
+            return NotFound("Given instructor isn't found");
+        }
+
         [HttpPost("add")]
         public IActionResult CreateInstructorEntry([FromBody] Instructor instructor) {
             if(ModelState.IsValid) {
@@ -40,7 +51,7 @@ namespace InstructorsListApp.Controllers
                 instructor.Id = id;
                 var instructorEntry = databaseContext.Instructors.FirstOrDefault(i => i.Id == id);
                 if(instructorEntry != null) {
-                    databaseContext.Entry<Instructor>(instructorEntry).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+                    databaseContext.Entry<Instructor>(instructorEntry).State = EntityState.Detached; // remove unneccessary refs
                     databaseContext.Instructors.Update(instructor);
                     databaseContext.SaveChanges();
                     return Ok();
