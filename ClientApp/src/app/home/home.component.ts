@@ -1,22 +1,26 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Instructor } from '../models/instructor';
+import { InstructorsHttpService } from '../services/instructors-http-service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  providers: [InstructorsHttpService]
 })
 export class HomeComponent {
-    public instructors: any[] = [{id: "1", firstName: "Test", lastName: "Testov"}];
+    public instructors: Instructor[];
+    private changingInstructor: Instructor = new Instructor();
 
-    constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-        /*http.get<Instructor[]>(baseUrl + 'api/v1/instructors').subscribe(result => {
-          this.instructors = result;
-        }, error => console.error(error));*/
+    constructor(private instructorsService: InstructorsHttpService) {}
+
+    ngOnInit() {
+      this.loadInstructors()
     }
-}
 
-interface Instructor {
-    id: string,
-    firstName: string,
-    lastName: string
+    private loadInstructors() {
+      this.instructorsService.getInstructors().subscribe(result => {
+        this.instructors = result;
+      })
+    }
 }
