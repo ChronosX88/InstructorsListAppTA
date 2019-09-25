@@ -10,7 +10,7 @@
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
-    <RootNamespace>instructors_crud_test_task</RootNamespace>
+    <RootNamespace>InstructorsListApp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

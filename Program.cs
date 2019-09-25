@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace instructors_crud_test_task
+namespace InstructorsListApp
 {
     public class Program
     {
