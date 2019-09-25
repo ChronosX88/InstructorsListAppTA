@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Instructor } from '../models/instructor';
+import { ResponseType } from '@angular/http';
  
 @Injectable()
 export class InstructorsHttpService {
@@ -11,7 +12,7 @@ export class InstructorsHttpService {
     }
 
     createInstructor(instructor: Instructor) {
-        return this.http.post(this.baseUrl + "api/v1/instructors/add", instructor)
+        return this.http.post<Instructor>(this.baseUrl + "api/v1/instructors/add", instructor)
     }
 
     updateInstructor(instructor: Instructor) {

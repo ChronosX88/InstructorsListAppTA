@@ -11,7 +11,7 @@
         <tr *ngFor="let instructor of instructors">
           <td>{{ instructor.firstName }}</td>
           <td>{{ instructor.lastName }}</td>
-          <td><button type="button" class="btn btn-danger">DELETE</button></td>
+          <td><button type="button" class="btn btn-danger" (click)="deleteInstructor(instructor)">DELETE</button></td>
         </tr>
     </tbody>
 </table>
@@ -21,6 +21,6 @@
   <label><h5 style="text-align: initial">Middle Name</h5><input type="text" style="margin-right: 20px" [(ngModel)]="changingInstructor.middleName"></label>
   <label><h5 style="text-align: initial">Last Name</h5><input type="text" [(ngModel)]="changingInstructor.lastName"></label>
   <br>
-  <button type="button" class="btn btn-primary">ADD/SAVE</button>
+  <button type="button" class="btn btn-primary" (click)="saveChanges()">ADD/SAVE</button>
 </div>
 
